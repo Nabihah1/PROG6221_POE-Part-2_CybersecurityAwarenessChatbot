@@ -96,9 +96,42 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
                 // Display a security tip of the day
                 DisplayTipOfTheDay();
 
+                // Display available topics the user can ask about
+                Console.WriteLine(new string('—', 70));
+                Console.WriteLine(" You can ask about: ");
+                Console.WriteLine(" - How to create strong passwords");
+                Console.WriteLine(" - How to recognize phishing emails");
+                Console.WriteLine(" - How to practise safe browsing");
+                Console.WriteLine(" - General questions like \"How are you?\", \"What's your purpose?\"");
+                Console.WriteLine(" - Or type 'exit' to quit.");
+                Console.WriteLine(new string('-', 70));
 
+                // Start the chat loop
+                while (true)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{userName}: ");
+                    string userInput = Console.ReadLine()?.ToLower().Trim();
 
-            }
+                    // checks for an empty input
+                    if (string.IsNullOrEmpty(userInput))
+                    {
+                        LoadingEffect();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        RespondWithSpeech("Please enter a valid question.");
+                        continue;
+                    }
+
+                    // check to see if the user enters the 'exit' command
+                    if (userInput == "exit")
+                    {
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        RespondWithSpeech("Stay safe and think before you click! Goodbye!");
+                        break;
+                    }
+
+                }
             }
 
 
