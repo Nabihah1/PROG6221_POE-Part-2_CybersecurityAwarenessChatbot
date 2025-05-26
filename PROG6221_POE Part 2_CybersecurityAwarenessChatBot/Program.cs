@@ -430,11 +430,109 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
                 return;
             }
 
+            // flag to check if chatbot found a matching response to the users input 
+            bool foundResponse = false;
+            //saves users response to the chatbot conversation history 
+            chatHistory.Add($"{userName}:{input}");
 
+            //loop to check the responses dictionary and displays the appropriate output 
+            foreach (var entry in responses)
+            {
+                if (normalizedInput == NormalizeInput(entry.Key))
+                {
+                    lastTopic = entry.Key;
 
+                    //display random tip based on user input 
+                    switch (entry.Key)
+                    {
+                        case "password":
+                            RandomPasswordResponse();
+                            break;
 
+                        case "phishing":
+                            RandomPhishingResponse();
+                            break;
 
+                        case "safe browsing":
+                            RandomSafeBrowsingResponse();
+                            break;
 
+                        default:
+                            RespondWithSpeech(entry.Value);
+                            break;
 
+                    }
+                    //flag = true
+                    foundResponse = true;
+                    //exits loop after finding a response 
+                    break;
+                }
+            }
+
+            //if nothing was found in the 'response' dictionary, then loop check the 'keywordGroup' dictionary 
+            if (!foundResponse)
+            {
+                foreach (var group in keywordGroups)
+                {
+                    foreach (var synonym in group.Value)
+                    {
+                        if (normalizedInput == NormalizeInput(synonym) || normalizedInput.Contains(NormalizeInput(synonym)) ||
+                            //above, checks if the entire line entered by user matches the phrase from the keywordGroup dictionary exactly                        
+                            normalizedInput.StartsWith(NormalizeInput(synonym) + " ") ||
+                            //above, checks if the users input partly matches the phrase from the keywordGroup dictionary i.e. phrase is followed by more words 
+                            normalizedInput.EndsWith(" " + NormalizeInput(synonym)) ||
+                            //above, checks if the users input partly matches the phrase from the keywordGroup dictionary i.e. phrase is followed by more words
+                            normalizedInput.Contains(" " + NormalizeInput(synonym) + " "))
+                        //above, checks if the synonym appears as a separate phrase in the users input i.e spaces between each word 
+
+                        {
+                            lastTopic = group.Key;
+
+                            switch (group.Key)
+                            {
+                                case "password":
+                                    //displays random response from method 
+                                    RandomPasswordResponse();
+                                    break;
+
+                                case "phishing":
+                                    RandomPhishingResponse();
+                                    break;
+
+                                case "safe browsing":
+                                    RandomSafeBrowsingResponse();
+                                    break;
+
+                                default:
+                                    if (responses.ContainsKey(group.Key))
+                                    {
+                                        RespondWithSpeech(responses[group.Key]);
+                                    }
+                                    break;
+                            }
+
+                            //flag = true 
+                            foundResponse = true;
+                            //loop ends
+                            break;
+                        }
+                    }
+                    if (foundResponse)
+                        break;
+                }
+            }
+
+            //if a response is still not found, display error message 
+            if (!foundResponse)
+            {
+                RespondWithSpeech("Sorry, I don't understand. Type 'help' to see what you can ask about.");
+
+            }
         }
+
+
+
+
+
+    }
 }
