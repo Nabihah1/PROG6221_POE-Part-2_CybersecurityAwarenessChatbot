@@ -131,11 +131,12 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
                         break;
                     }
 
+                    HandleUserQuery(userInput, userName);
                 }
+                // Save chat history when exiting
+                SaveChatHistory();
             }
-
-
-
+        }
 
 
 
@@ -261,7 +262,44 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
             Console.WriteLine();
         }
 
+        //dictionary to store a phrases of confused words 
+        public static string lastTopic = " ";
+        static List<string> confusedWords = new List<string>
+        {
+            "i do not understand", "what", "explain", "dont understand", "don't understand", "huh", "confused", "lost", "more detail", "more info", "more information", "explain in more detail"
+        };
 
+
+        //dictionary to respond to basic queries 
+        static Dictionary<string, string> responses = new Dictionary<string, string>
+            {
+                { "how are you", "I'm doing great! How can I assist you with cybersecurity today?"},
+                { "what's your purpose", "My purpose is to educate you on how to create a safe environment online by giving cybersecurity tips." +
+                  "\nI can answer questions regarding phishing emails, password safety and safe browsing."},
+                 { "help", "You can ask about passwords, phishing, safe browsing, or general cybersecurity guidance."}
+
+        };
+
+
+        //dictionary to understand user, if they didn't enter main keyword from the 'responses' dictionary
+        static Dictionary<string, List<string>> keywordGroups = new Dictionary<string, List<string>>()
+            {
+                {"password", new List <string> {"passwords", "password", "strong password", "secure password"} },
+                {"phishing", new List <string> {"phishing", "phishing email", "fake email", "scam", "scams"} },
+                {"safe browsing", new List <string> {"browse safely", "secure browsing", "browsing","privacy", "safe-browsing"} },
+                {"how are you", new List <string> {"how are u", "how r u", "how are you?", "how r u?"} },
+                {"what's your purpose", new List <string> {"purpose", "what is your purpose", "whats your purpose" } },
+       };
+
+
+        //dictionary to understand memory recall (store user name and favourite security)
+        static Dictionary<string, string> MemoryRecall = new Dictionary<string, string>();
+        //flag to ensure that the memory recall only occurs once in every session - reminded user about interest 
+        static bool hasRemindedUserAboutInterest = false;
+        //flag to track if user expressed their interest 
+        static bool hasStoredInterest = false;
+
+        static List<string> chatHistory = new List<string>();
 
 
 
