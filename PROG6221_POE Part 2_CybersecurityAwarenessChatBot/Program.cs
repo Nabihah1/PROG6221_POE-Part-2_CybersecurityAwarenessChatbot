@@ -301,8 +301,75 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
 
         static List<string> chatHistory = new List<string>();
 
+        public static string NormalizeInput(string input)
+        {
+            //removes punctuation and converts user input to lowercase letters
+            return input.ToLower().Trim().Replace("?", "").Replace(".", "").Replace(",", "");
+        }
 
 
 
-    }
+
+        //method to answer basic questions from the user 
+        static void HandleUserQuery(string input, string userName)
+        {
+            //prevents chatbot from crashing out. simply prompts user to enter a valid entry 
+            if (string.IsNullOrWhiteSpace(input))
+                return;
+
+            //referencing the method in this method
+            string normalizedInput = NormalizeInput(input);
+            // to lower all user inputs to lowercase letters
+            string lowercaseInput = input.ToLower();
+            //splits words
+            string[] inputTokens = normalizedInput.Split(' ');
+
+
+            //checks if user expressed interest in a topic and responds appropriately
+            if (lowercaseInput.Contains("like ") || lowercaseInput.Contains("interested") || lowercaseInput.Contains("prefer") || lowercaseInput.Contains("enjoy"))
+            {
+                //set flag to false - tracks if users expressed their interest 
+                hasStoredInterest = false;
+
+                //loop to check if user prompt is stored in keywordGroup dictionary 
+                foreach (var group in keywordGroups)
+                {
+                    foreach (var synonym in group.Value)
+                    {
+                        if (normalizedInput.Contains(NormalizeInput(synonym)))
+                        {
+                            lastTopic = group.Key;
+                            MemoryRecall["favouriteTopic"] = group.Key;
+                            hasStoredInterest = true;
+                            RespondWithSpeech($"Great! I'll remember that you're interested in {group.Key}. It's a crucial part of staying safe online.");
+
+                            break;
+                        }
+                    }
+
+                    if (hasStoredInterest)
+                        break;
+                }
+
+                //if no matching topic was found 
+                if (!hasStoredInterest)
+                {
+                    RespondWithSpeech("Please enter a valid topic. Type 'help' to see what you can be interested in.");
+                }
+                return;
+
+            }
+
+            // Check if user's input contains their favourite topic, and mention it
+            if (MemoryRecall.ContainsKey("favouriteTopic") &&
+           normalizedInput.IndexOf(MemoryRecall["favouriteTopic"], StringComparison.OrdinalIgnoreCase) >= 0 &&
+            !hasRemindedUserAboutInterest)
+            {
+                string rememberedTopic = MemoryRecall["favouriteTopic"];
+                RespondWithSpeech($"As someone interested in {rememberedTopic}, here's something important you should know.");
+                hasRemindedUserAboutInterest = true;
+            }
+
+
+        }
 }
