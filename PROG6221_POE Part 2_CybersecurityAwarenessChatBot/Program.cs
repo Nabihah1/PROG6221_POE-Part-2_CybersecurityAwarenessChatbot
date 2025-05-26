@@ -370,6 +370,71 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
                 hasRemindedUserAboutInterest = true;
             }
 
+            // Checks if user is confused and displays the appropriate output 
+            foreach (string phrase in confusedWords)
+            {
+                string normalizedPhrase = NormalizeInput(phrase);
+
+                if (normalizedInput == normalizedPhrase ||
+                    //above, checks if the entire line entered by user matches the confused phrase dictionary exactly!
+                    normalizedInput.StartsWith(normalizedPhrase + " ") ||
+                    //above, checks if the users input partly matches the phrase from the confused dictionary i.e. phrase is followed by more words
+                    normalizedInput.EndsWith(" " + normalizedPhrase))
+                //above, checks if the users input partly matches the phrase from the confused dictionary i.e. phrase is followed by more words 
+                {
+
+                    if (!string.IsNullOrEmpty(lastTopic))
+                    {
+                        // Only explain if lastTopic is one of the three recognized topics
+                        if (lastTopic == "password" || lastTopic == "phishing" || lastTopic == "safe browsing")
+                        {
+                            ContinueExplaining(lastTopic);
+                        }
+                        else if (responses.ContainsKey(lastTopic))
+                        {
+                            // For other known topics like "how are you" or "what's your purpose"
+                            RespondWithSpeech(responses[lastTopic]);
+                        }
+                        else
+                        {
+                            //message displays when chatbot knows what the last topic is, but cant explain it i.e it isn't password, phishing or safe-browsing
+                            RespondWithSpeech("I’ll do my best to explain better. Can you be more specific? Type 'help' to see what you can ask about.");
+                        }
+                    }
+                    else
+                    {
+                        //when user is confused at the start of the program, and there is no 'lastTopic' in the chatbot history
+                        RespondWithSpeech("I'm here to help.Type 'help' to see what you can ask about");
+                    }
+                    return;
+                }
+            }
+
+
+            //checks for sentiment keywords and responds appropriately
+            if (lowercaseInput.Contains("worried") || lowercaseInput.Contains("scared") || lowercaseInput.Contains("anxious"))
+            {
+                RespondWithSpeech("It's completely okay to feel that way. Cybersecurity can seem complex, \nbut you're doing great by asking questions. I'm here to help you every step of the way.\nType 'help' to see what you can learn about to feel less anxious.");
+                return;
+            }
+
+            if (lowercaseInput.Contains("frustrated"))
+            {
+                RespondWithSpeech("Don't worry if it's frustrating. Many people feel that way at first. \nYou're not alone, and I'll do my best to make things clearer for you.\nIf you wish, you can type 'help' to see what else you can learn about.");
+                return;
+            }
+
+            if (lowercaseInput.Contains("curious"))
+            {
+                RespondWithSpeech("I love your curiosity! \nLet's explore the topic together — cybersecurity is full of interesting areas.Type 'help' to see what else you can learn about.");
+                return;
+            }
+
+
+
+
+
+
 
         }
 }
