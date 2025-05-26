@@ -1,13 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
+using System.Speech.Synthesis;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
 {
     class Program
     {
+        static SpeechSynthesizer synth = new SpeechSynthesizer
+        {
+            //sets the volume to the highest available option i.e. 100
+            Volume = 100,
+            //sets the speed at which the text is spoken to the default speed
+            Rate = 0
+        };
+
+        //class used to generate random tips (e.g. tips of the day, security tips)
+        static Random random = new Random();
+
+
         static void Main()
         {
             {
@@ -59,7 +75,10 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
 
                 Console.WriteLine();
 
+                // Play audio greeting
+                PlayGreetingAudio("greetingsTwo.wav"); // Use the converted WAV file
 
+                RespondWithSpeech("Welcome to your Cybersecurity Awareness Bot. I'm here to help you stay safe online.");
 
 
 
@@ -67,5 +86,96 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
 
             }
             }
+
+
+
+
+
+
+
+
+
+
+
+        //method to play audio 
+        public static void PlayGreetingAudio(string filePath)
+        {
+            try
+            {
+                string fullPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                if (File.Exists(fullPath))
+                {
+                    SoundPlayer player = new SoundPlayer(fullPath);
+                    player.PlaySync();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Error: The file {filePath} was not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Error playing audio: {ex.Message} ");
+            }
+        }
+
+
+
+        //method to read out text 
+        public static void RespondWithSpeech(string response)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            TypingEffect($"ChatBot: {response}\n");
+
+            try
+            {
+                //speaks out loud 
+                synth.Speak(response); //reliable speech output 
+
+            }
+            catch (Exception ex)
+            {
+                //error message if exception fails 
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Its Error: {ex.Message}");
+            }
+            chatHistory.Add($"ChatBot: {response}");
+
+        }
+
+
+
+        //method to stimulate the effect of someone typing 
+        public static void TypingEffect(string message, int delay = 30)
+        {
+            //loops through each letter in the message 
+            foreach (char c in message)
+            {
+                //prints the current letter in the word, without moving to a new line
+                Console.Write(c);
+                //the delay adds a to the typing effect (delay by a millisecond, before typing the next character 
+                Thread.Sleep(delay);
+            }
+        }
+
+        //saves entire conversation to a text file 
+        public static void SaveChatHistory()
+        {
+            //name of file where text will be saved 
+            string path = "chat_history.txt";
+            //writes all the lines in the conversation 
+            File.WriteAllLines(path, chatHistory);
+            //colour of text will be grey 
+            Console.ForegroundColor = ConsoleColor.Gray;
+            //prints confirmation message 
+            Console.WriteLine($"Chat history saved to {path}");
+        }
+
+
+
+
     }
 }
