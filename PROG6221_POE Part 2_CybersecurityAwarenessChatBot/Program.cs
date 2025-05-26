@@ -531,6 +531,133 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
         }
 
 
+        //method to display password tips 
+        public static void RandomPasswordResponse()
+        {
+            //array to store password tips 
+            string[] tips = new string[]
+            {
+               "Create strong passwords by using a mix of letters,numbers, and symbols.",
+
+               "Have a strong password prevents identity theft and financial loss," +
+               "\nSo do not use common words like \n-'password', \n-'qwerty', \n-'admin', \n-'1234' in your password.  ",
+
+               "A strong password prevents hackers from accessing your personal information such as your name,address,back account details",
+
+               "Passwords ensure that your account or device remain protected ",
+
+               "Your password needs to be easy for you to remember,but difficult for others to hack." +
+               "\nAvoid using personal information when creating a password For example your birthday or name.",
+
+               "Don't reuse passwords across websites.\nUse a password manager instead."
+            };
+
+            //randomly picks an index between 0 and tips.length - 1 (i.e. 6 - 1 , because there are  6 tips and arrays start at index 1)
+            int tipIndex = random.Next(tips.Length);
+            //displays dots to stimulate chatbot thinking 
+            LoadingEffect();
+            Console.ForegroundColor = ConsoleColor.Green;
+            RespondWithSpeech($" Password Tip of the Day: {tips[tipIndex]}");
+        }
+
+
+        public static void RandomPhishingResponse()
+        {
+            //array to store tips 
+            string[] tips = new string[]
+            {
+               "Always verify the sender!\nMake sure you recognise an email address before responding." +
+               "\nPhishers often mimic trusted sources.",
+
+               "Phishing emails often have poor grammar and spelling errors \nFor example: 'feaUtures' instead of 'features' \nBeware of this!",
+
+               "Beware of generic greetings \nFor example: 'Dear customer' instead of addressing you by your name",
+
+               "Phishing uses urgent and threatening language to ask for your personal information " +
+               "\nFor example: The email will create a sense of urgency by warning you about a security breach causing you to act \nquickly without thinking",
+
+               "Legitimate companies will never ask for your private information via email",
+
+               "Use security software that includes phishing software so that you can stay extra safe online!"
+            };
+
+            //randomly picks an index between 0 and tips.length - 1 (i.e. 6 - 1 , because there are  6 tips and arrays start at index 1)
+            int tipIndex = random.Next(tips.Length);
+            //displays dots to stimulate chatbot thinking 
+            LoadingEffect();
+            Console.ForegroundColor = ConsoleColor.Green;
+            RespondWithSpeech($"Phishing Tip of the Day: {tips[tipIndex]}");
+        }
+
+
+        public static void RandomSafeBrowsingResponse()
+        {
+            //array to store tips 
+            string[] tips = new string[]
+            {
+               "Checks the URL you are using against a database for malicious websites and" +
+               " \nwarns you about unsafe browsing before granting you access the website. " +
+               "\nIdeally, you should use websites with 'https://' URL's. This means that the site uses encryption. ",
+
+               "Avoid clicking on pop-up advertisements or unfamiliar download links." +
+               "\nThis prevents your private information from being collected on malicious website",
+
+               "Clear your cache, cookies and history regularly to avoid being tracked by hackers.",
+
+               "Do not use public Wi-Fi when doing confidential activities such as online banking",
+
+               "Install anti-virus software on your devices",
+
+               "Enable the safe browsing feature on your browser settings "
+            };
+
+            //randomly picks an index between 0 and tips.length - 1 (i.e. 6 - 1 , because there are  6 tips and arrays start at index 1)
+            int tipIndex = random.Next(tips.Length);
+            //displays dots to stimulate chatbot thinking 
+            LoadingEffect();
+            Console.ForegroundColor = ConsoleColor.Green;
+            RespondWithSpeech($"Safe Browsing Tip of the Day: {tips[tipIndex]}");
+        }
+
+
+        //method to display more explanation if user is confused 
+        static void ContinueExplaining(string topic)
+        {
+            //checks which topic the user asked about and displays the appropriate output 
+            switch (topic)
+            {
+                case "password":
+                    RespondWithSpeech("Let me explain passwords more clearly.\n" +
+                                      "Passwords ensure that your account or device remain protected.They keep your information private from others." +
+                                      "\nA good password contains the following:" +
+                                      "\n- More than 12 characters" +
+                                      "\n- Contains upper case and lower case alphabets " +
+                                      "\n- Includes a combination of letters, numbers and characters" +
+                                      "\n- Does not contain common words e.g. 'password', 'qwerty', 'admin', '1234'" +
+                                      "\n- Does not use your personal information as a password e.g. birthday, name");
+                    break;
+
+                case "phishing":
+                    RespondWithSpeech("Let me explain phishing more clearly." +
+                        "\nPhishing is type of social engineering attack. It uses deception to trick you into revealing your confidential  " +
+                        "\ninformation such as passwords, credit card information, or install malware on your devices." +
+                        "\nIt is typically done via texts, emails or websites. The scammers often pretend to be from a banking company," +
+                        "\nor another service that you use. They will ask you to click on a link, enter your password, or" +
+                        "\n ask for your card number");
+
+
+                    break;
+
+                case "safe browsing":
+                    RespondWithSpeech("Let me explain safe browsing more clearly." +
+                        "\nSafe browsing is a service offered by Google.It aims to protect you from accessing unsafe websites and downloads." +
+                        "\nIt also educates you about potential dangers on the internet.");
+                    break;
+
+            }
+        }
+
+
 
 
 
