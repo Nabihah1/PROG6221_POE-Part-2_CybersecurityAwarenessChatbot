@@ -81,6 +81,20 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
                 RespondWithSpeech("Welcome to your Cybersecurity Awareness Bot. I'm here to help you stay safe online.");
 
 
+                // Ask for the user's name
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("What's your name? ");
+                Console.ForegroundColor = ConsoleColor.White;
+                string userName = Console.ReadLine();
+                //store username in memoryRecall()
+                MemoryRecall["name"] = userName;
+
+                LoadingEffect();
+
+                RespondWithSpeech($"Hi,{userName}! Here's a fun tip for you!");
+
+                // Display a security tip of the day
+                DisplayTipOfTheDay();
 
 
 
@@ -173,6 +187,48 @@ namespace PROG6221_POE_Part_2_CybersecurityAwarenessChatBot
             //prints confirmation message 
             Console.WriteLine($"Chat history saved to {path}");
         }
+
+
+        //method to display a fun tip of the day
+        public static void DisplayTipOfTheDay()
+        {
+            //array to store a variety of tips that can be rotated 
+            string[] tips = new string[]
+            {
+               "Tip: Use multi-factor authentication {MFA} wherever possible to enhance security!",
+               "Tip: Always verify the senders email address before clicking on any link",
+               "Tip: Avoid using public Wi-Fi for accessing sensitive information like banking"
+            };
+
+            //randomly selects an index between zero and length - 1 (arrays start at index zero)
+            int tipIndex = random.Next(tips.Length);
+            //displays dots to display chatbot thinking 
+            LoadingEffect();
+            //changes colour 
+            Console.ForegroundColor = ConsoleColor.Green;
+            RespondWithSpeech($"Security Tip of the Day: {tips[tipIndex]}");
+        }
+
+
+        //method to stimulate chatbot thinking 
+        public static void LoadingEffect()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            //displays 'chatbot' without a new line
+            Console.Write("chatbot");
+            //loops 3 times
+            for (int i = 0; i < 3; i++)
+            {
+                //pauses for 0.4 seconds (400 milliseconds 
+                Thread.Sleep(400);
+                //prints 3 dots after 'chatbot' to stimulate chatbot thinking 
+                Console.Write("...");
+            }
+            //move to next line 
+            Console.WriteLine();
+        }
+
+
 
 
 
